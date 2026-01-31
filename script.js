@@ -84,13 +84,45 @@ function createDefaultGifts() {
 
 function randomPos() {
     const maxX = window.innerWidth - CONFIG.giftSize.width - 40;
-
-    // only use the upper part of the screen so gifts start above the box
     const upperAreaHeight = window.innerHeight * 0.5;
 
+    const minDistance = 160; // minimum space between images
+    let tries = 0;
+
+    while (tries < 100) {
+        const x = Math.random() * maxX;
+        const y = Math.random() * upperAreaHeight + 40;
+
+        let tooClose = false;
+
+        // check against already placed gifts
+        for (const key in state.giftPositions) {
+            const p = state.giftPositions[key];
+            const dx = p.x - x;
+            const dy = p.y - y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < minDistance) {
+                tooClose = true;
+                break;
+            }
+        }
+
+        if (!tooClose) {
+            return {
+                x: x,
+                y: y,
+                rotation: Math.random() * 10 - 5
+            };
+        }
+
+        tries++;
+    }
+
+    // fallback if many tries fail
     return {
         x: Math.random() * maxX,
-        y: Math.random() * upperAreaHeight + 40, // scattered near the top
+        y: Math.random() * upperAreaHeight + 40,
         rotation: Math.random() * 10 - 5
     };
 }
