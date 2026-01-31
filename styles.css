@@ -78,7 +78,7 @@ body {
     transition: transform 0.3s ease;
     border: 2px solid #ffe0eb;
     overflow: hidden;
-    z-index: 10;
+    z-index: 20;
 }
 
 .gift-image:hover {
@@ -197,3 +197,21 @@ body {
     opacity: 1;
     transform: scale(1);
 }
+
+/* Show only first 8 gifts */
+#gift-8,
+#gift-9 {
+    display: none;
+}
+
+/* Force scattered layout to avoid overlap */
+#gift-0 { top: 40px;  left: 5%;  }
+#gift-1 { top: 80px;  left: 25%; }
+#gift-2 { top: 20px;  left: 45%; }
+#gift-3 { top: 100px; left: 65%; }
+#gift-4 { top: 60px;  left: 85%; transform: translateX(-100%); }
+
+#gift-5 { top: 220px; left: 10%; }
+#gift-6 { top: 260px; left: 40%; }
+#gift-7 { top: 200px; left: 70%; }
+
