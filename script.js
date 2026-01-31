@@ -84,11 +84,13 @@ function createDefaultGifts() {
 
 function randomPos() {
     const maxX = window.innerWidth - CONFIG.giftSize.width - 40;
-    const maxY = window.innerHeight * 1.5;
+
+    // only use the upper part of the screen so gifts start above the box
+    const upperAreaHeight = window.innerHeight * 0.5;
 
     return {
         x: Math.random() * maxX,
-        y: Math.random() * maxY + 100,
+        y: Math.random() * upperAreaHeight + 40, // scattered near the top
         rotation: Math.random() * 10 - 5
     };
 }
@@ -166,17 +168,23 @@ function handleScroll() {
 }
 
 function moveGifts() {
-    state.giftImages.forEach(({element,id})=>{
-        const start = state.originalPositions[id];
-        const boxX = window.innerWidth/2 - 60;
-        const boxY = window.innerHeight - 200;
+    const boxRect = state.giftBox.getBoundingClientRect();
 
-        const dx = (boxX - start.x) * state.scrollProgress;
-        const dy = (boxY - start.y) * state.scrollProgress;
+    // center of the visible gift box on screen
+    const targetX = boxRect.left + boxRect.width / 2 - CONFIG.giftSize.width / 2;
+    const targetY = boxRect.top + boxRect.height / 2 - CONFIG.giftSize.height / 2;
+
+    state.giftImages.forEach(({ element, id }) => {
+        const start = state.originalPositions[id];
+
+        const dx = (targetX - start.x) * state.scrollProgress;
+        const dy = (targetY - start.y) * state.scrollProgress;
 
         element.style.transform =
-            `translate(${dx}px,${dy}px) rotate(${start.rotation*(1-state.scrollProgress)}deg)`;
-        element.style.opacity = 1 - state.scrollProgress*0.8;
+            `translate(${dx}px, ${dy}px) rotate(${start.rotation * (1 - state.scrollProgress)}deg)`;
+
+        // fade slightly as they go into the box
+        element.style.opacity = 1 - state.scrollProgress * 0.8;
     });
 }
 
