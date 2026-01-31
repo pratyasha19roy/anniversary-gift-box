@@ -170,9 +170,9 @@ function handleScroll() {
 function moveGifts() {
     const boxRect = state.giftBox.getBoundingClientRect();
 
-    // center of the visible gift box on screen
-    const targetX = boxRect.left + boxRect.width / 2 - CONFIG.giftSize.width / 2;
-    const targetY = boxRect.top + boxRect.height / 2 - CONFIG.giftSize.height / 2;
+    // convert box center from viewport coords to page coords
+    const targetX = boxRect.left + window.scrollX + boxRect.width / 2 - CONFIG.giftSize.width / 2;
+    const targetY = boxRect.top + window.scrollY + boxRect.height / 2 - CONFIG.giftSize.height / 2;
 
     state.giftImages.forEach(({ element, id }) => {
         const start = state.originalPositions[id];
@@ -183,7 +183,6 @@ function moveGifts() {
         element.style.transform =
             `translate(${dx}px, ${dy}px) rotate(${start.rotation * (1 - state.scrollProgress)}deg)`;
 
-        // fade slightly as they go into the box
         element.style.opacity = 1 - state.scrollProgress * 0.8;
     });
 }
